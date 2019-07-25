@@ -10,6 +10,7 @@ class AutoEncoder(nn.Module):
         self.image_dims = (1,28,28)
         self.input_size = np.prod(self.image_dims)
         self.hidden_size = 500
+        self.verbose = True
 
         self.fc_down = nn.Linear(self.input_size, self.hidden_size)
         self.fc_up = nn.Linear(self.hidden_size, self.input_size)

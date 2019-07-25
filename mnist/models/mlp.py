@@ -10,7 +10,7 @@ class MLP(nn.Module):
 
         self.image_dims = (1,28,28)
         self.input_size = np.prod(self.image_dims)
-        self.hidden_size = int(input_size / 2)
+        self.hidden_size = int(self.input_size / 2)
         self.classes = 10
         self.verbose = True
 
@@ -25,5 +25,7 @@ class MLP(nn.Module):
                                    self.final)
 
     def forward(self, x):
-        return self.model(x)
+        x = x.view(-1, np.prod(self.image_dims))
+        out = self.model(x)
+        return out
 
