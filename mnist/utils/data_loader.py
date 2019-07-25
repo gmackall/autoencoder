@@ -1,0 +1,14 @@
+import torch
+from torch.utils.data import DataLoader
+
+import torchvision
+from torchvision import datasets
+import torchvision.transforms as transforms
+
+def load_data(img_size, batch_size, data_root):
+    transform = transforms.Compose(
+        [transforms.Resize(img_size), transforms.ToTensor(), transforms.Normalize([0.5], [0.5])]
+        )
+    trainset = datasets.MNIST(data_root, transform=transform)
+    dataloader = torch.utils.data.DataLoader(trainset, batch_size, shuffle=True)
+    return dataloader

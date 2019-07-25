@@ -1,0 +1,10 @@
+import torch.optim as optim
+from data_loader import load_data
+
+def train(network, epochs, data_root):
+    train_loader = load_data(network.
+    for i in range(1, epochs + 1):
+        train_epoch(network, epoch_index, data, target)
+
+def train_epoch(network, epoch_index, data, target):
+    netork.train()
