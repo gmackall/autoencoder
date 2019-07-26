@@ -2,6 +2,9 @@ import numpy as np
 import math
 
 import torch.nn as nn
+import torch
+
+device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
 
 class AutoEncoder(nn.Module):
     def __init__(self):
@@ -9,8 +12,10 @@ class AutoEncoder(nn.Module):
 
         self.image_dims = (1,28,28)
         self.input_size = np.prod(self.image_dims)
-        self.hidden_size = 500
+        self.hidden_size = int(self.input_size/2)
         self.verbose = True
+        self.loss_fn = nn.MSELoss()
+        self.arch = "autoencoder"
 
         self.fc_down = nn.Linear(self.input_size, self.hidden_size)
         self.fc_up = nn.Linear(self.hidden_size, self.input_size)
@@ -22,7 +27,7 @@ class AutoEncoder(nn.Module):
                                    self.activation)
 
     def forward(self, x):
+        x =  x.to(device)
+        x = x.view(-1, np.prod(self.image_dims))
         out = self.model(x)
         return out
-
-        

@@ -9,8 +9,12 @@ from data_loader import load_data
 #       currently just hardcoded to get off the ground
 #       with MLP, will need MSE(out, base) for autoenc
 
+#Train on GPU if available
+device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
+
 def train(network, epochs, learning_rate, momentum, batch_size, data_root):
-    train_loader = load_data(np.prod(network.image_dims), batch_size, data_root)
+    network.to(device)
+    train_loader = load_data(batch_size, data_root)
     optimizer = optim.SGD(network.parameters(), lr=learning_rate, momentum=momentum)
 
     self_eval(network, train_loader)
@@ -23,10 +27,14 @@ def train_epoch(network, epoch_index, loader, optimizer):
     print_interval = 10
     
     for batch_num, (base, target) in enumerate(loader):
+        base = base.to(device)
+        target = target.to(device)
         optimizer.zero_grad()
-        out = network(base)
-        loss_fn = nn.CrossEntropyLoss()
-        loss = loss_fn(out, target)
+        out = network(base).to(device)
+        if network.arch == "autoencoder":
+            loss = network.loss_fn(out, base.view(-1, np.prod(network.image_dims)))
+        else:
+            loss = network.loss_fn(out, target)
         loss.backward()
         optimizer.step()
 
@@ -34,7 +42,7 @@ def train_epoch(network, epoch_index, loader, optimizer):
             if network.verbose:
                 print('Train Epoch: {} [{}/{} ({:.0f}%)]\tLoss: {:.6f}'.format(
                     epoch_index, batch_num * len(base), len(loader.dataset),
-                    100. * batch_num / len(loader), loss.item()))
+                    100. * batch_num / len(loader), loss))#loss.item()
 
 def self_eval(network, loader):
     network.eval()
@@ -42,9 +50,13 @@ def self_eval(network, loader):
     correct = 0
     with torch.no_grad():
         for data, target in loader:
-            out = network(data)
-            loss_fn = nn.CrossEntropyLoss()
-            test_loss += loss_fn(out, target)
+            data = data.to(device)
+            target = target.to(device)
+            out = network(data).to(device)
+            if network.arch == "autoencoder":
+                test_loss += network.loss_fn(out, data.view(-1, np.prod(network.image_dims)))
+            else:
+                test_loss += network.loss_fn(out, target)
             pred = out.data.max(1, keepdim=True)[1]
             correct += pred.eq(target.data.view_as(pred)).sum()
         test_loss /= len(loader.dataset)
