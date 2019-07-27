@@ -1,0 +1,13 @@
+import torch
+from torchtext import data
+from torchtext import datasets
+import os.path
+
+def download_data(batch_size, data_root):
+    return datasets.WikiText2.iters(batch_size=batch_size, root=data_root, device=torch.device)
+
+def load_data(batch_size, data_root="./datasets/data"):
+    assert os.path.exists(data_root), "Bad data_root supplied"
+    return datasets.WikiText2.iters(batch_size=batch_size, root=data_root, device=torch.device)
+
+#maybe methods for getting text
