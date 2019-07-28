@@ -5,7 +5,7 @@ import torch
 
 from .data_loader import load_data
 
-#TODO: -replace hardcoded loss w/ model defined loss
+#TODO: -(mostly completed) replace hardcoded loss w/ model defined loss
 #       currently just hardcoded to get off the ground
 #       with MLP, will need MSE(out, base) for autoenc
 
