@@ -27,6 +27,6 @@ def alt_load_data(batch_size, seq_length=50):
         batch_size=batch_size,
         bptt_len=seq_length,
         device=torch.device)
-    return train_iter, valid_iter, test_iter
+    return (train_iter, valid_iter, test_iter), TEXT
         
 #maybe methods for getting text

@@ -3,7 +3,7 @@ import numpy as np
 import torch.nn as nn
 import torch
 
-from data_loader import load_data
+from .data_loader import load_data
 
 #TODO: -replace hardcoded loss w/ model defined loss
 #       currently just hardcoded to get off the ground
