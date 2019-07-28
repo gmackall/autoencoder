@@ -10,8 +10,8 @@ For a sample usage of this code, see mnist/ex_autoencoder.py. Looking at the cod
 For example, a sample input could be the images:
 
 ![alt text][ins]
-[ins]: https://github.com/gmackall/autoencoder/blob/master/mnist/ins.png
+[ins]: https://github.com/gmackall/autoencoder/blob/master/mnist/ins.png "Inputs"
 which then generate a sample output:
 
 ![alt text][outs]
-[outs]: https://github.com/gmackall/autoencoder/blob/master/mnist/outs.png
+[outs]: https://github.com/gmackall/autoencoder/blob/master/mnist/outs.png "Reconstructed inputs"
