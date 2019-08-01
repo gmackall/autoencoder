@@ -5,7 +5,7 @@ Plan is to make a more complicated text autoencoder with combined reconstruction
 ## Getting started with MNIST portion
 The first thing to do to get started would be to install conda, and then load and activate the environment stored in requirements.yml. Once that is done you should be ready to go.
 
-There are many tutorials online of how to use pytorch, so this isn't really one of those. This is just a collection of simple and segmented code for personal use/reference that could serve as a useful base for others. Models are defined in mnist/models/, currently there is just a super basic autoencoder and MLP. The autoencoder could be improved in many ways, the most obvious of which is to make it a regularized autoencoder, discussed [here](https://www.deeplearningbook.org/contents/autoencoders.html) in 14.2.
+There are many tutorials online of how to use pytorch, so this isn't really one of those. This is just a collection of simple and segmented code for personal use/reference that could serve as a useful base for others. Models are defined in mnist/models/, currently there is just a super basic autoencoder and MLP. The autoencoder could be improved in many ways, the most obvious of which is to make it a regularized autoencoder, discussed [here](https://www.deeplearningbook.org/contents/autoencoders.html) in 14.2. I have added a sparsity penalization inspired by Andrew Ng's [CS294A lecture notes.](https://web.stanford.edu/class/cs294a/sparseAutoencoder.pdf) The obvious next step would be to add more layers.
 
 For a sample usage of this code, see mnist/ex_autoencoder.py. Looking at the code there should help show how the pieces fit together. Running it trains a very simple autoencoder (unregularized) which has an architecture of input layer (width 784) -> hidden layer (width half that of input) -> output layer (width 784). It trains for 10 epochs, and then outputs sample input images and their reconstructions.
 
@@ -17,6 +17,8 @@ which then generate a sample output:
 
 ![alt text](https://github.com/gmackall/autoencoder/blob/master/mnist/outs.png "Reconstructed inputs")
 
-The code hasn't been pushed yet, but a sample output with regularization added looks like this (different inputs but gives you an idea:
+By adding regularization in the form of penalizing KL-divergence between activations in the hidden layer and some small value, say $latex \rho=.05$, you can achieve better reconstruction as seen below:
 
 ![alt text](https://github.com/gmackall/autoencoder/blob/master/mnist/testouts.png "With regularization")
+
+One can enable or disable sparsity by a flag passed to the network at instantiation, look to mnist/ex_autoencoder.py for examples, or look at the init for the network itself. Suggested uses for this repository are as a guide to base your code off of, or to use for feature extraction for training another network.
