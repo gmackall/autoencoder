@@ -3,6 +3,7 @@ import torch.nn as nn
 import torch.nn.functional as F
 
 device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
+LAMBDA = 1 #determines weight of sparsity penalty portion of loss
 
 #Takes two images, turns them into probability distribution,
 #then takes kl divergence. Alternative choice to MSE,
@@ -12,7 +13,7 @@ def softmax_kl(p, q):
     q = F.softmax(q).to(device)
 
     s1 = torch.sum(p * torch.log(p / q)) #this should be only val
-    s2 = torch.sum((1-p) * torch.log((1-p)/(1-q))) #seen online, im desperate
+    #s2 = torch.sum((1-p) * torch.log((1-p)/(1-q))) #seen online, im desperate
 
     return s1 #+ s2
 
@@ -34,7 +35,7 @@ def sparse_softmax_kl(in_vals, out_vals, hidden_dims, rho_val=0):
     #for i in range(batch_size):
     #    acc_sparsity_loss += softmax_kl(rho, out_vals[0][i])
         
-    return softmax_kl(in_vals, out_vals[1]) + (.1)*softmax_kl(rho, avg_middle_vals)#(acc_sparsity_loss / batch_size)
+    return softmax_kl(in_vals, out_vals[1]) + LAMBDA * softmax_kl(rho, avg_middle_vals)#(acc_sparsity_loss / batch_size)
 
 def regular_softmax_kl(in_vals, out_vals, placeholder1, placeholder2=0):
     return softmax_kl(in_vals, out_vals[1])
