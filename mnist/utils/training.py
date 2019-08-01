@@ -30,9 +30,10 @@ def train_epoch(network, epoch_index, loader, optimizer):
         base = base.to(device)
         target = target.to(device)
         optimizer.zero_grad()
-        out = network(base).to(device)
+        out = network(base)
         if network.arch == "autoencoder":
-            loss = network.loss_fn(out, base.view(-1, np.prod(network.image_dims)))
+            ins = base.view(-1, np.prod(network.image_dims)).to(device)
+            loss = network.loss_fn(ins, out, network.hidden_size)
         else:
             loss = network.loss_fn(out, target)
         loss.backward()
@@ -49,17 +50,23 @@ def self_eval(network, loader):
     test_loss = 0
     correct = 0
     with torch.no_grad():
-        for data, target in loader:
-            data = data.to(device)
+        for base, target in loader:
+            base = base.to(device)
             target = target.to(device)
-            out = network(data).to(device)
+            out = network(base)
             if network.arch == "autoencoder":
-                test_loss += network.loss_fn(out, data.view(-1, np.prod(network.image_dims)))
+                ins = base.view(-1, np.prod(network.image_dims)).to(device)
+                test_loss += network.loss_fn(ins, out, network.hidden_size)
             else:
+                out = out.to(device)
                 test_loss += network.loss_fn(out, target)
-            pred = out.data.max(1, keepdim=True)[1]
-            correct += pred.eq(target.data.view_as(pred)).sum()
+                pred = out.data.max(1, keepdim=True)[1]
+                correct += pred.eq(target.data.view_as(pred)).sum()
         test_loss /= len(loader.dataset)
-        print('\nTest set: Avg. loss: {:.4f}, Accuracy: {}/{} ({:.0f}%)\n'.format(
-                test_loss, correct, len(loader.dataset),
-                100. * correct / len(loader.dataset)))
+        if network.arch == "autoencoder":
+            print('\nTest set: Avg. loss: {:.4f}\n'.format(
+                    test_loss))
+        else:
+            print('\nTest set: Avg. loss: {:.4f}, Accuracy: {}/{} ({:.0f}%)\n'.format(
+                    test_loss, correct, len(loader.dataset),
+                    100. * correct / len(loader.dataset)))
