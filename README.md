@@ -1,4 +1,4 @@
-Repository with simple example of autoencoder and classifier on MNIST, in pytorch.
+	Repository with simple example of autoencoder and classifier on MNIST, in pytorch.
 Requirements can be installed using conda environment file in this directory.
 Plan is to make a more complicated text autoencoder with combined reconstruction loss + loss of text quality at bottleneck.
 
@@ -16,3 +16,7 @@ For example, a sample input could be the images:
 which then generate a sample output:
 
 ![alt text](https://github.com/gmackall/autoencoder/blob/master/mnist/outs.png "Reconstructed inputs")
+
+The code hasn't been pushed yet, but a sample output with regularization added looks like this (different inputs but gives you an idea:
+
+![alt text](https://github.com/gmackall/autoencoder/blob/master/mnist/testouts.png "With regularization")
