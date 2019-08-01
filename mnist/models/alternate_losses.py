@@ -14,7 +14,7 @@ def softmax_kl(p, q):
     s1 = torch.sum(p * torch.log(p / q)) #this should be only val
     s2 = torch.sum((1-p) * torch.log((1-p)/(1-q))) #seen online, im desperate
 
-    return s1 + s2
+    return s1 #+ s2
 
 #Takes input to network, out_vals of format (encoded, decoded),
 # and rho. Returns kl(in,out)
@@ -22,15 +22,19 @@ def softmax_kl(p, q):
 #Encourages sparsity.
 def sparse_softmax_kl(in_vals, out_vals, hidden_dims, rho_val=0):
     rho = torch.FloatTensor([rho_val for _ in range(hidden_dims)]).unsqueeze(0).to(device)
-    avg_middle_vals =  torch.sum(out_vals[0], dim=0, keepdim=True)
+    batch_size = in_vals.size()[0]
+    avg_middle_vals =  torch.sum(out_vals[0], dim=0, keepdim=True) / batch_size
+    #print(avg_middle_vals.size())
     #print("sparsity portion of loss: {}".format(softmax_kl(rho, avg_middle_vals)))
     
-    batch_size = in_vals.size()[0]
+    
     #acc_sparsity_loss = 0
+    #for i in range(out_vals[0].size()[1]):
+    #    acc_sparsity_loss += softmax_kl(rho[0][i], avg_middle_vals[0][i])
     #for i in range(batch_size):
     #    acc_sparsity_loss += softmax_kl(rho, out_vals[0][i])
         
-    return softmax_kl(in_vals, out_vals[1]) + softmax_kl(rho, avg_middle_vals)#(acc_sparsity_loss / batch_size)
+    return softmax_kl(in_vals, out_vals[1]) + (.1)*softmax_kl(rho, avg_middle_vals)#(acc_sparsity_loss / batch_size)
 
 def regular_softmax_kl(in_vals, out_vals, placeholder1, placeholder2=0):
     return softmax_kl(in_vals, out_vals[1])

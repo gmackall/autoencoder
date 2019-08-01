@@ -12,7 +12,7 @@ from .data_loader import load_data
 #Train on GPU if available
 device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
 
-def train(network, epochs, learning_rate, momentum, batch_size, data_root):
+def train(network, epochs=10, learning_rate=.01, momentum=.9, batch_size=32, data_root='./datasets/data/', save_dir='./chkpts/model.pt'):
     network.to(device)
     train_loader = load_data(batch_size, data_root)
     optimizer = optim.SGD(network.parameters(), lr=learning_rate, momentum=momentum)
@@ -21,6 +21,8 @@ def train(network, epochs, learning_rate, momentum, batch_size, data_root):
     for i in range(1, epochs + 1):
         train_epoch(network, i, train_loader, optimizer)
         self_eval(network, train_loader)
+    if save_dir is not None:
+        torch.save(network.state_dict(), save_dir)
 
 def train_epoch(network, epoch_index, loader, optimizer):
     network.train()

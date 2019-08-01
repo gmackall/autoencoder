@@ -12,3 +12,6 @@ def load_data(batch_size, data_root):
     trainset = datasets.MNIST(data_root, transform=transform)
     dataloader = torch.utils.data.DataLoader(trainset, batch_size, shuffle=True)
     return dataloader
+
+#def load_feature_extracted_data(batch_size, data_root, trained_encoder):
+    
