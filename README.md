@@ -17,8 +17,8 @@ which then generate a sample output:
 
 ![alt text](https://github.com/gmackall/autoencoder/blob/master/mnist/outs.png "Reconstructed inputs")
 
-By adding regularization in the form of penalizing KL-divergence between activations in the hidden layer and some small value, say $latex \rho=.05$, you can achieve better reconstruction as seen below:
+By adding regularization in the form of penalizing KL-divergence between activations in the hidden layer and some small value rho, say rho=.05, you can achieve better reconstruction as seen below (different inputs but you get the idea):
 
 ![alt text](https://github.com/gmackall/autoencoder/blob/master/mnist/testouts.png "With regularization")
 
-One can enable or disable sparsity by a flag passed to the network at instantiation, look to mnist/ex_autoencoder.py for examples, or look at the init for the network itself. Suggested uses for this repository are as a guide to base your code off of, or to use for feature extraction for training another network.
+To really show it is a better reconstruction it would be better to compare MSE or some unbiased metric, but I would say it pretty clearly looks better and you can do that yourself if you are interested (let me know if it isn't). One can enable or disable sparsity by a flag passed to the network at instantiation, look to mnist/ex_autoencoder.py for examples, or look at the init for the network itself. Suggested uses for this repository are as a guide to base your code off of, or to use for feature extraction for training another network.
